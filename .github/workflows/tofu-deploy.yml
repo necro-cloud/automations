@@ -32,6 +32,9 @@ jobs:
       run:
         working-directory: ${{ inputs.folder_path }}
     steps:
+      - name: Checking out the repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf33321
+
       - name: Create and save KubeConfig file
         run: |
 
@@ -40,9 +43,6 @@ jobs:
 
           # Save the KubeConfig file
           echo '${{ secrets.KUBECONFIG }}' >> ${{ env.KUBECONFIG }}
-
-      - name: Checking out the repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf33321
 
       - name: Tofu Initialization
         run: tofu init
