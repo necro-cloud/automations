@@ -35,7 +35,7 @@ jobs:
       - name: Checking out the repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf33321
 
-      - name: Create and save KubeConfig file
+      - name: Create, save and validate KubeConfig file
         run: |
 
           # Create the folder for KubeConfig file
@@ -44,9 +44,23 @@ jobs:
           # Save the KubeConfig file
           echo '${{ secrets.KUBECONFIG }}' >> ${{ env.KUBECONFIG }}
 
+          # Validate KubeConfig file before deployment process starts
+          KUBECONFIG_CHECK=$(kubectl get ns > /dev/null; echo $?)
+
+          if [[ "$KUBECONFIG_CHECK" != "0" ]]
+          then
+            echo "Connection to self hosted K3d cluster failed, please check the KUBECONFIG secret"
+            exit 1
+          else
+            echo "Connection to self hosted K3d cluster is successfull!"
+          fi
+
       - name: Tofu Initialization
         run: tofu init
 
       - name: Tofu Deployment Plan
         run: tofu plan
+
+      - name: Tofu Deployment Apply
+        run: tofu apply
 
