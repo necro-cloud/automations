@@ -1,0 +1,46 @@
+name: OpenTofu Deployment onto Self Hosted K3d Cluster
+
+on:
+  workflow_call:
+    inputs:
+      deployment_name:
+        description: Name of the deployment to be performed
+        required: true
+        type: string
+      folder_path:
+        description: Path for the deployment to be performed
+        required: true
+        type: string
+      runners:
+        description: Self Hosted Runners to be used for deployment
+        required: true
+        type: string
+    secrets:
+      KUBECONFIG:
+        description: KubeConfig to be used for deployment for K8s resources
+        required: true
+
+jobs:
+  tofu_deploy:
+    name: Deploying ${{ inputs.deployment_name }} onto Self Hosted K3d Cluster
+    runs-on: [self-hosted, linux, '${{ inputs.runners }}']
+    env:
+      KUBECONFIG: '/tmp/k3d/config.yml'
+      KUBECONFIG_FOLDER: '/tmp/k3d'
+      KUBE_CONFIG_PATH: '/tmp/k3d/config.yml'
+    steps:
+      - name: Create and save KubeConfig file
+        run: |
+
+          # Create the folder for KubeConfig file
+          mkdir -p ${{ env.KUBECONFIG_FOLDER }}
+
+          # Save the KubeConfig file
+          echo '${{ secrets.KUBECONFIG }}' >> ${{ env.KUBECONFIG }}
+
+      - name: Tofu Initialization
+        run: tofu init
+
+      - name: Tofu Deployment Plan
+        run: tofu plan
+
