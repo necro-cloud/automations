@@ -52,7 +52,7 @@ jobs:
             echo "Connection to self hosted K3d cluster failed, please check the KUBECONFIG secret"
             exit 1
           else
-            echo "Connection to self hosted K3d cluster is successfull!"
+            echo "Connection to self hosted K3d cluster is successful!"
           fi
 
       - name: Tofu Initialization
@@ -62,5 +62,5 @@ jobs:
         run: tofu plan
 
       - name: Tofu Deployment Apply
-        run: tofu apply
+        run: tofu apply -auto-approve
 
