@@ -1,0 +1,60 @@
+name: Execute Shell Scripts
+
+on:
+  workflow_call:
+    inputs:
+      deployment_name:
+        description: Name of the deployment to be performed
+        required: true
+        type: string
+      runners:
+        description: Self Hosted Runners to be used for deployment
+        required: true
+        type: string
+      shell_script:
+        description: Script for executing within runner and K3D context
+        required: true
+        type: string
+    secrets:
+      KUBECONFIG:
+        description: KubeConfig to be used for deployment for K8s resources
+        required: true
+
+jobs:
+  tofu_deploy:
+    name: Executing shell scripts for ${{ inputs.deployment_name }}
+    runs-on: [self-hosted, linux, '${{ inputs.runners }}']
+    env:
+      KUBECONFIG: '/tmp/k3d/config.yml'
+      KUBECONFIG_FOLDER: '/tmp/k3d'
+      KUBE_CONFIG_PATH: '/tmp/k3d/config.yml'
+    defaults:
+      run:
+        working-directory: ${{ inputs.folder_path }}
+    steps:
+      - name: Checking out the repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf33321
+
+      - name: Create, save and validate KubeConfig file
+        run: |
+
+          # Create the folder for KubeConfig file
+          mkdir -p ${{ env.KUBECONFIG_FOLDER }}
+
+          # Save the KubeConfig file
+          echo '${{ secrets.KUBECONFIG }}' >> ${{ env.KUBECONFIG }}
+
+          # Validate KubeConfig file before deployment process starts
+          KUBECONFIG_CHECK=$(kubectl get ns > /dev/null; echo $?)
+
+          if [[ "$KUBECONFIG_CHECK" != "0" ]]
+          then
+            echo "Connection to self hosted K3d cluster failed, please check the KUBECONFIG secret"
+            exit 1
+          else
+            echo "Connection to self hosted K3d cluster is successful!"
+          fi
+
+      - name: Executing shell script
+        run: ${{ inputs.shell_script }}
+
