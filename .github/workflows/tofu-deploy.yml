@@ -15,6 +15,26 @@ on:
         description: Self Hosted Runners to be used for deployment
         required: true
         type: string
+      pre_init_script:
+        description: Script to run before running Tofu Init
+        default: ''
+        required: false
+        type: string
+      pre_plan_script:
+        description: Script to run before running Tofu Plan
+        default: ''
+        required: false
+        type: string
+      pre_apply_script:
+        description: Script to run before running Tofu Apply
+        default: ''
+        required: false
+        type: string
+      post_apply_script:
+        description: Script to run after running Tofu Apply
+        default: ''
+        required: false
+        type: string
     secrets:
       KUBECONFIG:
         description: KubeConfig to be used for deployment for K8s resources
@@ -55,12 +75,28 @@ jobs:
             echo "Connection to self hosted K3d cluster is successful!"
           fi
 
+      - name: Running script before Tofu Initialization
+        if: ${{ inputs.pre_init_script != '' }}
+        run: ${{ inputs.pre_init_script }}
+
       - name: Tofu Initialization
         run: tofu init
+
+      - name: Running script before Tofu Deployment Plan
+        if: ${{ inputs.pre_plan_script != '' }}
+        run: ${{ inputs.pre_plan_script }}
 
       - name: Tofu Deployment Plan
         run: tofu plan
 
+      - name: Running script before Tofu Deployment Apply
+        if: ${{ inputs.pre_apply_script != '' }}
+        run: ${{ inputs.pre_apply_script }}
+
       - name: Tofu Deployment Apply
         run: tofu apply -auto-approve
+
+      - name: Running script after Tofu Deployment Apply
+        if: ${{ inputs.post_apply_script != '' }}
+        run: ${{ inputs.post_apply_script }}
 
