@@ -74,7 +74,6 @@ jobs:
             # Form the final development version
             export SEMVER_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
           else
-          then
             # Default value for minor version
             MINOR_VERSION="0"
 
