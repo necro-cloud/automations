@@ -20,6 +20,10 @@ on:
         description: Script to run before image build process
         required: false
         type: string
+      build_path:
+        description: Directory to build docker image
+        required: true
+        type: string
     secrets:
       DOCKER_ACCESS_TOKEN:
         description: Docker Access Token
@@ -29,6 +33,9 @@ jobs:
   build_push_image:
     name: Building and storing Docker Images
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.build_path }}
     steps:
       - name: Checking out the repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
