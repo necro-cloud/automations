@@ -40,6 +40,10 @@ on:
         description: KubeConfig to be used for deployment for K8s resources
         required: true
 
+      TFVARS:
+        description: TFVARS File to be used for deployment for K8s resources
+        required: true
+
 jobs:
   tofu_deploy:
     name: Deploying ${{ inputs.deployment_name }} onto Self Hosted K3d Cluster
@@ -75,6 +79,9 @@ jobs:
             echo "Connection to self hosted K3d cluster is successful!"
           fi
 
+      - name: Initializing TFVARS file to be used for deployment
+        run: echo '${{ secrets.TFVARS }}' >> terraform.tfvars.json
+
       - name: Running script before Tofu Initialization
         if: ${{ inputs.pre_init_script != '' }}
         run: ${{ inputs.pre_init_script }}
@@ -87,14 +94,14 @@ jobs:
         run: ${{ inputs.pre_plan_script }}
 
       - name: Tofu Deployment Plan
-        run: tofu plan
+        run: tofu plan -var-file terraform.tfvars.json
 
       - name: Running script before Tofu Deployment Apply
         if: ${{ inputs.pre_apply_script != '' }}
         run: ${{ inputs.pre_apply_script }}
 
       - name: Tofu Deployment Apply
-        run: tofu apply -auto-approve
+        run: tofu apply -var-file terraform.tfvars.json -auto-approve
 
       - name: Running script after Tofu Deployment Apply
         if: ${{ inputs.post_apply_script != '' }}
