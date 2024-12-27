@@ -126,7 +126,7 @@ jobs:
           SEMVER_VERSION: ${{ steps.semver.outputs.SEMVER_VERSION }}
           GITHUB_TOKEN: ${{ secrets.PHOTOATOM_GITHUB_SECRET }}
         run: |
-          gh variable set "${{ inputs.version_name }}" --org PhotoAtom --body "${{ env.SEMVER_VERSION }}"
+          gh variable set "${{ inputs.version_name }}" --org PhotoAtom --body "${{ env.SEMVER_VERSION }}" --visibility all
 
       - name: Output Runner Image Details as a Job Summary
         env:
