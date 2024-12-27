@@ -121,7 +121,7 @@ jobs:
         run: docker push "${{ env.IMAGE_NAME }}" --all-tags
 
       - name: Recording tag for versioning
-        # if: ${{ github.event.pull_request.merged == true }}
+        if: ${{ github.event.pull_request.merged == true }}
         env:
           SEMVER_VERSION: ${{ steps.semver.outputs.SEMVER_VERSION }}
           GITHUB_TOKEN: ${{ secrets.PHOTOATOM_GITHUB_SECRET }}
