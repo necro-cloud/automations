@@ -35,6 +35,11 @@ on:
         default: ''
         required: false
         type: string
+      artifact_version:
+        description: Artifact Version for deploying using OpenTofu
+        default: latest
+        required: false
+        type: string
     secrets:
       KUBECONFIG:
         description: KubeConfig to be used for deployment for K8s resources
@@ -94,6 +99,8 @@ jobs:
         run: ${{ inputs.pre_plan_script }}
 
       - name: Tofu Deployment Plan
+        env:
+          TF_VAR_artifact_version: ${{ inputs.artifact_version }}
         run: tofu plan -var-file terraform.tfvars.json
 
       - name: Running script before Tofu Deployment Apply
@@ -101,6 +108,8 @@ jobs:
         run: ${{ inputs.pre_apply_script }}
 
       - name: Tofu Deployment Apply
+        env:
+          TF_VAR_artifact_version: ${{ inputs.artifact_version }}
         run: tofu apply -var-file terraform.tfvars.json -auto-approve
 
       - name: Running script after Tofu Deployment Apply
