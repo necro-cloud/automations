@@ -1,0 +1,37 @@
+name: Trigger Workflow for Deployment
+
+on:
+  workflow_call:
+    inputs:
+      REPOSITORY_DEFINITION:
+        type: string
+        required: true
+        description: Repository in which the workflow needs to be triggered
+        default: ""
+
+      WORKFLOW_DEFINITION:
+        type: string
+        required: true
+        description: Workflow to be triggered
+        default: ""
+
+    secrets:
+      PHOTOATOM_GITHUB_SECRET:
+        description: PhotoAtom GitHub Secret
+        required: true
+
+jobs:
+  deployment_trigger:
+    name: Trigger Deployment Workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger the specified workflow
+        run: gh workflow run "${{ inputs.WORKFLOW_DEFINITION }}" --repo="${{ inputs.REPOSITORY_DEFINITION }}"
+
+      - name: Track Deployment Workflow Status
+        run: |
+          # Fetch Pipeline ID to "watch" the flow
+          RUN_ID=$(gh run list --workflow="${{ inputs.WORKFLOW_DEFINITION }}" --repo="${{ inputs.REPOSITORY_DEFINITION }}" --json databaseId -q '.[0].databaseId')
+          
+          # "Watch" the execution
+          gh run watch "$RUN_ID" --repo="${{ inputs.REPOSITORY_DEFINITION }}" --interval=1 --exit-status
