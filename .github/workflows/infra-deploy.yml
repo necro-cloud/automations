@@ -1,0 +1,14 @@
+name: PhotoAtom Full Infrastructure Deployment
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  bootstrap_cluster:
+    name: PhotoAtom Cluster Setup Deployment
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
+    with:
+      REPOSITORY_DEFINITION: PhotoAtom/bootstrap-cluster
+      WORKFLOW_DEFINITION: cluster-base.yml
+    secrets: inherit
