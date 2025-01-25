@@ -23,7 +23,7 @@ on:
 jobs:
   deployment_trigger:
     name: Trigger Deployment Workflow
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       GH_TOKEN: ${{ secrets.PHOTOATOM_GITHUB_SECRET }}
     steps:
