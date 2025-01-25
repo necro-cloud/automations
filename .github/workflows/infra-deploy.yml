@@ -7,7 +7,7 @@ on:
 jobs:
   bootstrap_cluster:
     name: PhotoAtom Cluster Setup Deployment
-    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
     with:
       REPOSITORY_DEFINITION: PhotoAtom/bootstrap-cluster
       WORKFLOW_DEFINITION: cluster-base.yml
