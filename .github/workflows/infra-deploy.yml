@@ -1,13 +1,12 @@
 name: PhotoAtom Full Infrastructure Deployment
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
   bootstrap_cluster:
     name: PhotoAtom Cluster Setup Deployment
-    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
     with:
       REPOSITORY_DEFINITION: PhotoAtom/bootstrap-cluster
       WORKFLOW_DEFINITION: cluster-base.yml
@@ -16,7 +15,7 @@ jobs:
   minio:
     name: PhotoAtom MinIO Deployment
     needs: [bootstrap_cluster]
-    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
     with:
       REPOSITORY_DEFINITION: PhotoAtom/minio
       WORKFLOW_DEFINITION: tofu-deploy.yml
@@ -25,7 +24,7 @@ jobs:
   postgres:
     name: PhotoAtom CloudNative PG Deployment
     needs: [minio]
-    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
     with:
       REPOSITORY_DEFINITION: PhotoAtom/postgres
       WORKFLOW_DEFINITION: tofu-deploy.yml
@@ -34,7 +33,7 @@ jobs:
   valkey:
     name: PhotoAtom Valkey Deployment
     needs: [minio]
-    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
     with:
       REPOSITORY_DEFINITION: PhotoAtom/valkey
       WORKFLOW_DEFINITION: tofu-deploy.yml
@@ -43,7 +42,7 @@ jobs:
   keycloak:
     name: PhotoAtom Keycloak Deployment
     needs: [postgres]
-    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
     with:
       REPOSITORY_DEFINITION: PhotoAtom/keycloak
       WORKFLOW_DEFINITION: tofu-deploy.yml
@@ -52,7 +51,7 @@ jobs:
   backend:
     name: PhotoAtom Backend Deployment
     needs: [keycloak, valkey]
-    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
     with:
       REPOSITORY_DEFINITION: PhotoAtom/backend
       WORKFLOW_DEFINITION: tofu-deploy.yml
@@ -61,7 +60,7 @@ jobs:
   frontend:
     name: PhotoAtom Frontend Deployment
     needs: [backend]
-    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@main
     with:
       REPOSITORY_DEFINITION: PhotoAtom/frontend
       WORKFLOW_DEFINITION: tofu-deploy.yml
