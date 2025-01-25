@@ -40,4 +40,4 @@ jobs:
           RUN_ID=$(gh run list --workflow="${{ inputs.WORKFLOW_DEFINITION }}" --repo="${{ inputs.REPOSITORY_DEFINITION }}" --json databaseId -q '.[0].databaseId')
           
           # "Watch" the execution
-          gh run watch "$RUN_ID" --repo="${{ inputs.REPOSITORY_DEFINITION }}" --interval=1 --exit-status
+          gh run watch "$RUN_ID" --repo="${{ inputs.REPOSITORY_DEFINITION }}" --interval=5 --exit-status

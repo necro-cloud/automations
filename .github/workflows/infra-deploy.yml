@@ -12,3 +12,12 @@ jobs:
       REPOSITORY_DEFINITION: PhotoAtom/bootstrap-cluster
       WORKFLOW_DEFINITION: cluster-base.yml
     secrets: inherit
+
+  minio:
+    name: PhotoAtom MinIO Deployment
+    needs: [bootstrap_cluster]
+    uses: PhotoAtom/automations/.github/workflows/run-workflow.yml@feature/17/full-infra-pipeline
+    with:
+      REPOSITORY_DEFINITION: PhotoAtom/minio
+      WORKFLOW_DEFINITION: tofu-deploy.yml
+    secrets: inherit
