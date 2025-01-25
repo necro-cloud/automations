@@ -28,7 +28,11 @@ jobs:
       GH_TOKEN: ${{ secrets.PHOTOATOM_GITHUB_SECRET }}
     steps:
       - name: Trigger the specified workflow
-        run: gh workflow run "${{ inputs.WORKFLOW_DEFINITION }}" --repo="${{ inputs.REPOSITORY_DEFINITION }}"
+        run: |
+          gh workflow run "${{ inputs.WORKFLOW_DEFINITION }}" --repo="${{ inputs.REPOSITORY_DEFINITION }}"
+
+          # Sleep till the workflow is properly triggered
+          sleep 10
 
       - name: Track Deployment Workflow Status
         run: |
