@@ -67,6 +67,7 @@ jobs:
         name: Logging into Labs Quay Repository
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
         with:
+          registry: quay.io
           username: ${{ secrets.LAB_DOCKER_USERNAME }}
           password: ${{ secrets.LAB_DOCKER_PASSWORD }}
 
@@ -74,6 +75,7 @@ jobs:
         name: Logging into PhotoAtom Quay Repository
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
         with:
+          registry: quay.io
           username: ${{ secrets.PHOTOATOM_DOCKER_USERNAME }}
           password: ${{ secrets.PHOTOATOM_DOCKER_PASSWORD }}
 
