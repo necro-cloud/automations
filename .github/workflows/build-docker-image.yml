@@ -26,7 +26,7 @@ on:
         type: string
       version_name:
         description: Variable name to save versions in
-        required: true
+        required: false
         type: string
       repository:
         description: Repository to push the image in
@@ -145,7 +145,7 @@ jobs:
         run: docker push "${{ env.IMAGE_NAME }}" --all-tags
 
       - name: Recording tag for versioning
-        if: ${{ github.event.pull_request.merged == true }}
+        if: ${{ github.event.pull_request.merged == true && inputs.version_name != '' }}
         env:
           SEMVER_VERSION: ${{ steps.semver.outputs.SEMVER_VERSION }}
           GITHUB_TOKEN: ${{ secrets.PHOTOATOM_GITHUB_SECRET }}
