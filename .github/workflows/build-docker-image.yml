@@ -33,23 +33,11 @@ on:
         required: true
         type: string
     secrets:
-      DOCKER_ACCESS_TOKEN:
-        description: Docker Access Token
+      DOCKER_USERNAME:
+        description: Docker username for Authentication
         required: true
-      PHOTOATOM_GITHUB_SECRET:
-        description: PhotoAtom GitHub Secret
-        required: true
-      LAB_DOCKER_USERNAME:
-        description: Docker username for Labs
-        required: true
-      LAB_DOCKER_PASSWORD:
-        description: Docker password for Labs
-        required: true
-      PHOTOATOM_DOCKER_USERNAME:
-        description: Docker username for PhotoAtom
-        required: true
-      PHOTOATOM_DOCKER_PASSWORD:
-        description: Docker password for PhotoAtom
+      DOCKER_PASSWORD:
+        description: Docker password for Authentication
         required: true
 
 jobs:
@@ -63,21 +51,12 @@ jobs:
       - name: Checking out the repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
-      - if: ${{ inputs.repository == 'necronizerslab' }}
-        name: Logging into Labs Quay Repository
+      - name: Logging into PhotoAtom Quay Repository
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
         with:
           registry: quay.io
-          username: ${{ secrets.LAB_DOCKER_USERNAME }}
-          password: ${{ secrets.LAB_DOCKER_PASSWORD }}
-
-      - if: ${{ inputs.repository == 'photoatom' }}
-        name: Logging into PhotoAtom Quay Repository
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
-        with:
-          registry: quay.io
-          username: ${{ secrets.PHOTOATOM_DOCKER_USERNAME }}
-          password: ${{ secrets.PHOTOATOM_DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - id: semver
         name: Generate Semantic Versioned Tag and Name for the Docker Image
@@ -163,4 +142,3 @@ jobs:
           echo '**Image Name**: `${{ env.IMAGE_NAME }}`' >> $GITHUB_STEP_SUMMARY
           echo '**Tags**: `${{ env.SEMVER_VERSION }}`' >> $GITHUB_STEP_SUMMARY
           echo '**Fully Qualified Image Name**: `${{ env.IMAGE_NAME }}:${{ env.SEMVER_VERSION }}`' >> $GITHUB_STEP_SUMMARY
-
