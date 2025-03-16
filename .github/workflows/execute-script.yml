@@ -25,9 +25,9 @@ jobs:
     name: Executing shell scripts for ${{ inputs.deployment_name }}
     runs-on: [self-hosted, linux, '${{ inputs.runners }}']
     env:
-      KUBECONFIG: '/tmp/k3d/config.yml'
-      KUBECONFIG_FOLDER: '/tmp/k3d'
-      KUBE_CONFIG_PATH: '/tmp/k3d/config.yml'
+      KUBECONFIG: '/tmp/kubernetes/config.yml'
+      KUBECONFIG_FOLDER: '/tmp/kubernetes'
+      KUBE_CONFIG_PATH: '/tmp/k3d/kubernetes.yml'
     steps:
       - name: Checking out the repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf33321
@@ -46,10 +46,10 @@ jobs:
 
           if [[ "$KUBECONFIG_CHECK" != "0" ]]
           then
-            echo "Connection to self hosted K3d cluster failed, please check the KUBECONFIG secret"
+            echo "Connection to self hosted Kubernetes cluster failed, please check the KUBECONFIG secret"
             exit 1
           else
-            echo "Connection to self hosted K3d cluster is successful!"
+            echo "Connection to self hosted Kubernetes cluster is successful!"
           fi
 
       - name: Executing shell script

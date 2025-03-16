@@ -1,4 +1,4 @@
-name: OpenTofu Deployment onto Self Hosted K3d Cluster
+name: OpenTofu Deployment onto Self Hosted Kubernetes Cluster
 
 on:
   workflow_call:
@@ -42,21 +42,21 @@ on:
         type: string
     secrets:
       KUBECONFIG:
-        description: KubeConfig to be used for deployment for K8s resources
+        description: KubeConfig to be used for deployment for Kubernetes resources
         required: true
 
       TFVARS:
-        description: TFVARS File to be used for deployment for K8s resources
+        description: TFVARS File to be used for deployment for Kubernetes resources
         required: true
 
 jobs:
   tofu_deploy:
-    name: Deploying ${{ inputs.deployment_name }} onto Self Hosted K3d Cluster
+    name: Deploying ${{ inputs.deployment_name }} onto Self Hosted Kubernetes Cluster
     runs-on: [self-hosted, linux, '${{ inputs.runners }}']
     env:
-      KUBECONFIG: '/tmp/k3d/config.yml'
-      KUBECONFIG_FOLDER: '/tmp/k3d'
-      KUBE_CONFIG_PATH: '/tmp/k3d/config.yml'
+      KUBECONFIG: '/tmp/kubernetes/config.yml'
+      KUBECONFIG_FOLDER: '/tmp/kubernetes'
+      KUBE_CONFIG_PATH: '/tmp/kubernetes/config.yml'
     defaults:
       run:
         working-directory: ${{ inputs.folder_path }}
@@ -78,10 +78,10 @@ jobs:
 
           if [[ "$KUBECONFIG_CHECK" != "0" ]]
           then
-            echo "Connection to self hosted K3d cluster failed, please check the KUBECONFIG secret"
+            echo "Connection to self hosted Kuberetes cluster failed, please check the KUBECONFIG secret"
             exit 1
           else
-            echo "Connection to self hosted K3d cluster is successful!"
+            echo "Connection to self hosted Kubernetes cluster is successful!"
           fi
 
       - name: Initializing TFVARS file to be used for deployment
